@@ -42,7 +42,6 @@ public class ProcessWatchDog implements Runnable {
             OutputStream outputStream = process.getOutputStream ();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
             writer.write("Please kill yourself, thank you!\n");
-            writer.flush();
             process.waitFor();
             process.destroy();
             System.out.printf("Delete thread\n");
