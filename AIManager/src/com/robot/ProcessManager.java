@@ -25,7 +25,7 @@ public class ProcessManager {
     }
 
     public void add_process(String a_run_path) {
-        if (processWatchDogs.size() >= 500) return;
+        if (processWatchDogs.size() >= 300) return;
         ProcessWatchDog processWatchDog = new ProcessWatchDog(a_run_path, "./run.sh");
         synchronized (processWatchDogs) {
             processWatchDogs.add(processWatchDog);

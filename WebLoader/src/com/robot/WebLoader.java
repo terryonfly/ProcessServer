@@ -1,5 +1,7 @@
 package com.robot;
 
+import java.util.*;
+
 public class WebLoader {
 
     public static void main(String[] args) {
@@ -7,7 +9,8 @@ public class WebLoader {
         KillSignal killSignal = new KillSignal();
 
 	    while (true) {
-            System.out.printf("Web Loader\n");
+            long ms = new Date().getTime();
+            System.out.printf("[%d.%ds] Web Loader\n", ms / 1000, ms % 1000);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
