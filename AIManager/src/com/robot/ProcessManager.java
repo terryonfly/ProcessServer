@@ -25,6 +25,7 @@ public class ProcessManager {
     }
 
     public void add_process(String a_run_path) {
+        if (processWatchDogs.size() >= 500) return;
         ProcessWatchDog processWatchDog = new ProcessWatchDog(a_run_path, "./run.sh");
         synchronized (processWatchDogs) {
             processWatchDogs.add(processWatchDog);
@@ -45,13 +46,15 @@ public class ProcessManager {
         int process_count = get_process_count(a_run_path);
         if (process_count > a_process_count) {
             int remove_count = process_count - a_process_count;
-            for (int i = 0; i < processWatchDogs.size(); i ++) {
-                if (processWatchDogs.get(i).if_run_path_match(a_run_path)) {
-                    processWatchDogs.get(i).stop();
-                    processWatchDogs.remove(i);
-                    i --;
-                    remove_count --;
-                    if (remove_count <= 0) break;;
+            synchronized (processWatchDogs) {
+                for (int i = 0; i < processWatchDogs.size(); i++) {
+                    if (processWatchDogs.get(i).if_run_path_match(a_run_path)) {
+                        processWatchDogs.get(i).stop();
+                        processWatchDogs.remove(i);
+                        i--;
+                        remove_count--;
+                        if (remove_count <= 0) break;
+                    }
                 }
             }
         } else if (process_count < a_process_count) {
