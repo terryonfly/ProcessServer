@@ -12,7 +12,7 @@ public class WebLoader {
             long ms = new Date().getTime();
             System.out.printf("[%d.%ds] Web Loader\n", ms / 1000, ms % 1000);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
