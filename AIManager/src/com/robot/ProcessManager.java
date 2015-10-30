@@ -26,7 +26,11 @@ public class ProcessManager implements Runnable {
         }
     }
 
-    HashMap<String, ProcessWatchDogList> processWatchDogs;
+    public HashMap<String, ProcessWatchDogList> processWatchDogs;
+
+    public ArrayList<ProcessWatchDog> die_processes;
+
+    public int unormal_die_processes_count = 0;
 
     private static final ProcessManager processManager = new ProcessManager();
 
@@ -37,6 +41,7 @@ public class ProcessManager implements Runnable {
 
     public ProcessManager() {
         processWatchDogs = new HashMap<String, ProcessWatchDogList>();
+        die_processes = new ArrayList<ProcessWatchDog>();
         new Thread(this).start();
     }
 
@@ -48,8 +53,9 @@ public class ProcessManager implements Runnable {
     public void run() {
         while (is_running) {
             check_process_plans();
+            check_die_processes();
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -80,6 +86,17 @@ public class ProcessManager implements Runnable {
         }
     }
 
+    public void check_die_processes() {
+        synchronized (die_processes) {
+            for (int i = 0; i < die_processes.size(); i ++) {
+                if (die_processes.get(i).has_exit_process) {
+                    die_processes.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
     public void add_process(String a_run_path) {
         ProcessWatchDog processWatchDog = new ProcessWatchDog(a_run_path, "./run.sh");
         synchronized (processWatchDogs) {
@@ -90,12 +107,36 @@ public class ProcessManager implements Runnable {
     }
 
     public void del_process(String a_run_path) {
+        ProcessWatchDog processWatchDog_to_del = null;
         synchronized (processWatchDogs) {
             ProcessWatchDogList processWatchDogList = processWatchDogs.get(a_run_path);
             if (processWatchDogList.processWatchDogs.size() > 0) {
-                ProcessWatchDog processWatchDog_to_del = processWatchDogList.processWatchDogs.get(0);
-                processWatchDog_to_del.stop();
+                processWatchDog_to_del = processWatchDogList.processWatchDogs.get(0);
                 processWatchDogList.processWatchDogs.remove(0);
+                processWatchDog_to_del.destroy_process();
+                int retry_times = 3;
+                boolean is_normal_del = false;
+                for (int i = 0; i < retry_times; i ++) {
+                    if (processWatchDog_to_del.confirm_exit_process) {
+                        is_normal_del = true;
+                        break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (!is_normal_del) {
+                    unormal_die_processes_count ++;
+                    processWatchDog_to_del.force_destroy_process();
+                    processWatchDog_to_del = null;
+                }
+            }
+        }
+        synchronized (die_processes) {
+            if (processWatchDog_to_del != null) {
+                die_processes.add(processWatchDog_to_del);
             }
         }
         System.out.printf("current processes count : %d\n", get_all_processes_count());
@@ -114,8 +155,14 @@ public class ProcessManager implements Runnable {
 
     public void set_process_count(String a_run_path, int a_process_count) {
         synchronized (processWatchDogs) {
-            ProcessWatchDogList processWatchDogList = processWatchDogs.get(a_run_path);
-            processWatchDogList.plan_process_count = a_process_count;
+            if (processWatchDogs.containsKey(a_run_path)) {
+                ProcessWatchDogList processWatchDogList = processWatchDogs.get(a_run_path);
+                processWatchDogList.plan_process_count = a_process_count;
+            } else {
+                ProcessWatchDogList processWatchDogList = new ProcessWatchDogList();
+                processWatchDogList.plan_process_count = a_process_count;
+                processWatchDogs.put(a_run_path, processWatchDogList);
+            }
         }
     }
 

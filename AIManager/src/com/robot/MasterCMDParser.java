@@ -64,7 +64,9 @@ public class MasterCMDParser {
                         int single_run_count = processWatchDogList.processWatchDogs.size();
                         processes.put(single_run_path, single_run_count);
                     }
-                    String res_string = MasterCMDMaker.getInstance().make_processes_list(processes);
+                    int die_count = ProcessManager.getInstance().die_processes.size();
+                    int unormal_die_count = ProcessManager.getInstance().unormal_die_processes_count;
+                    String res_string = MasterCMDMaker.getInstance().make_processes_list(processes, die_count, unormal_die_count);
                     masterTalkerCallback.send_msg(res_string);
                     break;
                 case CMD_ID_SHOW_ALL_PROCESSES_OUTPUT:

@@ -34,7 +34,7 @@ public class MasterCMDMaker {
         return -1;
     }
 
-    public String make_processes_list(HashMap<String, Integer> processes) {
+    public String make_processes_list(HashMap<String, Integer> processes, int die_processes_count, int unormal_die_processes_count) {
         JSONObject cmd = new JSONObject();
         try {
             cmd.put("res_id", res_id_int(RES_ID.RES_ID_PROCESSES_LIST));
@@ -51,6 +51,8 @@ public class MasterCMDMaker {
                 processes_list.put(process);
             }
             cmd_values.put("processes_list", processes_list);
+            cmd_values.put("die_count", die_processes_count);
+            cmd_values.put("unormal_die_count", unormal_die_processes_count);
             cmd.put("res_values", cmd_values);
             return cmd.toString();
         } catch (JSONException e) {

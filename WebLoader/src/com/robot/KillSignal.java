@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
  */
 public class KillSignal implements Runnable, SignalHandler {
 
+    public boolean has_kill = false;
+
     public KillSignal() {
         new Thread(this).start();
         Signal.handle(new Signal("TERM"), this);
@@ -25,6 +27,7 @@ public class KillSignal implements Runnable, SignalHandler {
             try {
                 String readedString = reader.readLine();
                 if (readedString.equals("Please kill yourself, thank you!")) {
+                    has_kill = true;
                     kill();
                     break;
                 }
@@ -40,12 +43,14 @@ public class KillSignal implements Runnable, SignalHandler {
     }
 
     public void kill() {
+        System.out.printf("OK, I will kill myself!\n");
+        /* You can do somethings to the end */
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("kill signal is recevied.");
+        System.out.printf("Now, I had killed myself!\n");
         System.exit(0);
     }
 }

@@ -38,6 +38,8 @@ public class MasterCMDParser {
                 case RES_ID_PROCESSES_LIST:
                     JSONArray processes_list = res_values.getJSONArray("processes_list");
                     int total_process_count = 0;
+                    int die_count = res_values.getInt("die_count");
+                    int unormal_die_count = res_values.getInt("unormal_die_count");
                     for (int i = 0; i < processes_list.length(); i ++) {
                         JSONObject process = (JSONObject)processes_list.get(i);
                         String run_path = process.getString("run_path");
@@ -46,6 +48,8 @@ public class MasterCMDParser {
                         total_process_count += run_count;
                     }
                     System.out.printf("total process count : %d\n", total_process_count);
+                    System.out.printf("be die-ing process count : %d\n", die_count);
+                    System.out.printf("bad killed process count : %d\n", unormal_die_count);
                     break;
             }
             last_res = res;

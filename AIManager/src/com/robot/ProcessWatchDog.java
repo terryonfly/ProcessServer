@@ -1,9 +1,6 @@
 package com.robot;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * Created by terry on 15/10/29.
@@ -16,10 +13,19 @@ public class ProcessWatchDog implements Runnable {
 
     private String run_cmd;
 
+    public Process process = null;
+
+    public boolean confirm_exit_process = false;
+
+    public boolean has_exit_process = false;
+
+    Thread thread = null;
+
     public ProcessWatchDog(String a_run_path, String a_run_cmd) {
         run_path = a_run_path;
         run_cmd = a_run_cmd;
-        new Thread(this).start();
+        thread = new Thread(this);
+        thread.start();
     }
 
     public void stop() {
@@ -30,26 +36,64 @@ public class ProcessWatchDog implements Runnable {
     public void run() {
         try {
             String s;
-            Process process;
+            confirm_exit_process = false;
+            has_exit_process = false;
             File f = new File(run_path);
             process = Runtime.getRuntime().exec(run_cmd, null, f);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while(is_running) {
                 if ((s=bufferedReader.readLine()) != null) {
-//                    System.out.println(s);
+                    if (!confirm_exit_process) {
+                        if (s.equals("OK, I will kill myself!")) {
+//                            System.out.printf("Process start run to end\n");
+                            confirm_exit_process = true;
+                        }
+                    } else {
+                        if (s.equals("Now, I had killed myself!")) {
+//                            System.out.printf("Thread run to end by normal\n");
+                            bufferedReader.close();
+                            is_running = false;
+                        }
+                    }
+                    if (!confirm_exit_process) {
+//                    System.out.printf("s = %s\n", s);
+                    }
                 }
             }
-            OutputStream outputStream = process.getOutputStream ();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-            writer.write("Please kill yourself, thank you!\n");
-            process.waitFor();
+            try {
+                process.waitFor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             process.destroy();
-            System.out.printf("Delete thread\n");
+            process = null;
+            has_exit_process = true;
+//            System.out.printf("Delete thread\n");
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        }
+    }
+
+    public void destroy_process() {
+        OutputStream outputStream = process.getOutputStream ();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+        try {
+            writer.write("Please kill yourself, thank you!\n");
+            writer.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void force_destroy_process() {
+        System.err.printf("Now force destory process because the process did not confirm me he is going to kill himself.\n");
+        System.err.printf("The process path is %s\n", run_path);
+        if (process != null) {
+            process.destroy();
+            process = null;
+            is_running = false;
+        }
+        thread.interrupt();
     }
 
     public String get_run_path() {

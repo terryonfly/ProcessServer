@@ -8,11 +8,11 @@ public class WebLoader {
 
         KillSignal killSignal = new KillSignal();
 
-	    while (true) {
+	    while (!killSignal.has_kill) {
             long ms = new Date().getTime();
-            System.out.printf("[%d.%ds] Web Loader\n", ms / 1000, ms % 1000);
+//            System.out.printf("[%d.%ds] Web Loader\n", ms / 1000, ms % 1000);
             try {
-                Thread.sleep(15000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
