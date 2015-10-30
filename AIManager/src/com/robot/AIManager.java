@@ -9,6 +9,7 @@ public class AIManager {
 
     public static void main(String[] args) {
         System.out.printf("========== Begin ==========\n");
+        ProcessManager.getInstance();
         ManagerServer managerServer = new ManagerServer();
         while (true);
     }
