@@ -36,7 +36,7 @@ public class ProcessWatchDog implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while(is_running) {
                 if ((s=bufferedReader.readLine()) != null) {
-                    System.out.println(s);
+//                    System.out.println(s);
                 }
             }
             OutputStream outputStream = process.getOutputStream ();

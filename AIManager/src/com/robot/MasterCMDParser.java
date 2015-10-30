@@ -7,6 +7,8 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by terry on 15/10/29.
@@ -53,13 +55,14 @@ public class MasterCMDParser {
                     break;
                 case CMD_ID_LIST_PROCESSES:
                     HashMap<String, Integer> processes = new HashMap<String, Integer>();
-                    for (int i = 0; i < ProcessManager.getInstance().processWatchDogs.size(); i ++) {
-                        String single_run_path = ProcessManager.getInstance().processWatchDogs.get(i).get_run_path();
-                        if (processes.containsKey(single_run_path)) {
-                            processes.put(single_run_path, processes.get(single_run_path) + 1);
-                        } else {
-                            processes.put(single_run_path, 1);
-                        }
+
+                    Iterator iter = ProcessManager.getInstance().processWatchDogs.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        Map.Entry entry = (Map.Entry) iter.next();
+                        String single_run_path = (String) entry.getKey();
+                        ProcessManager.ProcessWatchDogList processWatchDogList = (ProcessManager.ProcessWatchDogList) entry.getValue();
+                        int single_run_count = processWatchDogList.processWatchDogs.size();
+                        processes.put(single_run_path, single_run_count);
                     }
                     String res_string = MasterCMDMaker.getInstance().make_processes_list(processes);
                     masterTalkerCallback.send_msg(res_string);
