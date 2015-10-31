@@ -2,15 +2,21 @@ package com.robot;
 
 import java.util.*;
 
-public class WebLoader {
+public class AIApplication {
+
+    KillSignal killSignal = null;
 
     public static void main(String[] args) {
+        AIApplication aiApplication = new AIApplication();
+        aiApplication.run();
+    }
 
-        KillSignal killSignal = new KillSignal();
-        killSignal.add_signal();
-        killSignal.start();
+    public AIApplication() {
+        killSignal = new KillSignal(this);
+    }
 
-	    while (!killSignal.has_kill) {
+    public void run() {
+        while (!killSignal.has_kill) {
             long ms = new Date().getTime();
 //            System.out.printf("[%d.%ds] Web Loader\n", ms / 1000, ms % 1000);
             for (int i = 0; i < 1000000; i ++) {
@@ -21,6 +27,14 @@ public class WebLoader {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void kill() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
