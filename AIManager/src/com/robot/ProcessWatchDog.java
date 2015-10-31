@@ -56,7 +56,7 @@ public class ProcessWatchDog implements Runnable {
                         }
                     }
                     if (!confirm_exit_process) {
-//                    System.out.printf("s = %s\n", s);
+                        System.out.printf("s = %s\n", s);
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class ProcessWatchDog implements Runnable {
             has_exit_process = true;
 //            System.out.printf("Delete thread\n");
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -81,7 +81,7 @@ public class ProcessWatchDog implements Runnable {
             writer.write("Please kill yourself, thank you!\n");
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 

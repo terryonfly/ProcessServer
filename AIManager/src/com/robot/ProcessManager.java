@@ -55,7 +55,7 @@ public class ProcessManager implements Runnable {
             check_process_plans();
             check_die_processes();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -173,7 +173,7 @@ public class ProcessManager implements Runnable {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 ProcessWatchDogList processWatchDogList = (ProcessWatchDogList)entry.getValue();
-                all_processes_count = processWatchDogList.processWatchDogs.size();
+                all_processes_count += processWatchDogList.processWatchDogs.size();
             }
         }
         return all_processes_count;

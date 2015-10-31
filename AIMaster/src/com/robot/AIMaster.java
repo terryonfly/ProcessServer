@@ -8,6 +8,23 @@ public class AIMaster {
 
         if (args.length > 0) {
             String arg_cmd = args[0];
+            if (arg_cmd.equals("test")) {
+                String run_path = "/home/terry/ProcessServer/WebLoader";
+                int run_count = 0;
+                while (true) {
+                    if (run_count == 0) run_count = 300;
+                    else run_count = 0;
+                    String cmd_string = masterCMDMaker.make_set_processes_count(run_path, run_count);
+                    managerConnector.send_msg(cmd_string);
+                    System.out.printf("count = %d\n", run_count);
+                    try {
+                        if (run_count == 0) Thread.sleep(420 * 1000);
+                        else Thread.sleep(900 * 100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             if (arg_cmd.equals("set")) {
                 if (args.length == 3) {
                     String run_path = args[1];
