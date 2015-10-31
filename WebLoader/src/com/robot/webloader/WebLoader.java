@@ -39,7 +39,6 @@ public class WebLoader implements Runnable {
 
     @Override
     public void run() {
-//        Downloader downloader = new Downloader();
         try {
             while (is_run) {
                 URLModel target_url = urlQueue.get_one_url();
@@ -49,22 +48,21 @@ public class WebLoader implements Runnable {
                     try {
                         httpurl = new URL(target_url.url);
                     } catch (MalformedURLException e) {
-//                        e.printStackTrace();
                         System.err.printf("target_url is not a good url!\n");
                         continue;
                     }
-//                    String data = downloader.getHtml(target_url.url);
                     // Save it
                     String file_name = target_url.url_id + ".html";
-                    File f = new File("data/" + file_name);
+                    File file = new File("data/" + file_name);
+                    if (file.exists()) {
+                        continue;
+                    }
                     try {
-                        FileUtils.copyURLToFile(httpurl, f);
+                        FileUtils.copyURLToFile(httpurl, file);
                     } catch (IOException e) {
-//                        e.printStackTrace();
                         System.err.printf("url load err\n");
                         continue;
                     }
-//                    save_web_data(data, "data/", file_name);
                 } else {
 //                    System.out.println("No urls in DB");
                     Thread.sleep(1000);
@@ -72,32 +70,6 @@ public class WebLoader implements Runnable {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void save_web_data(String a_data, String a_path, String a_name) {
-        String save_file_name = a_path + a_name;
-        File file = new File(save_file_name);
-        if (file.exists()) {
-//            file.delete();
-            return;
-        }
-        FileWriter writer = null;
-        try {
-            file.createNewFile();
-            writer = new FileWriter(save_file_name, true);
-            writer.write(a_data);
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
