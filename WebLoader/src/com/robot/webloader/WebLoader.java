@@ -58,7 +58,6 @@ public class WebLoader implements Runnable {
 
     public void save_web_data(String a_data, String a_path, String a_name) {
         String save_file_name = a_path + a_name;
-        System.out.printf("file_name = %s\n", save_file_name);
         File file = new File(save_file_name);
         if (file.exists()) {
 //            file.delete();
