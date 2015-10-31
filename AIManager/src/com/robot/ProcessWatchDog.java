@@ -21,6 +21,10 @@ public class ProcessWatchDog implements Runnable {
 
     Thread thread = null;
 
+    BufferedWriter writer = null;
+
+    BufferedReader reader = null;
+
     public ProcessWatchDog(String a_run_path, String a_run_cmd) {
         run_path = a_run_path;
         run_cmd = a_run_cmd;
@@ -40,9 +44,10 @@ public class ProcessWatchDog implements Runnable {
             has_exit_process = false;
             File f = new File(run_path);
             process = Runtime.getRuntime().exec(run_cmd, null, f);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
             while(is_running) {
-                if ((s=bufferedReader.readLine()) != null) {
+                if ((s = reader.readLine()) != null) {
                     if (!confirm_exit_process) {
                         if (s.equals("OK, I will kill myself!")) {
 //                            System.out.printf("Process start run to end\n");
@@ -51,7 +56,7 @@ public class ProcessWatchDog implements Runnable {
                     } else {
                         if (s.equals("Now, I had killed myself!")) {
 //                            System.out.printf("Thread run to end by normal\n");
-                            bufferedReader.close();
+                            reader.close();
                             is_running = false;
                         }
                     }
@@ -60,6 +65,8 @@ public class ProcessWatchDog implements Runnable {
                     }
                 }
             }
+            reader.close();
+            writer.close();
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
@@ -70,18 +77,18 @@ public class ProcessWatchDog implements Runnable {
             has_exit_process = true;
 //            System.out.printf("Delete thread\n");
         } catch (IOException e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
     public void destroy_process() {
-        OutputStream outputStream = process.getOutputStream ();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-        try {
-            writer.write("Please kill yourself, thank you!\n");
-            writer.flush();
-        } catch (IOException e) {
-//            e.printStackTrace();
+        if (writer != null) {
+            try {
+                writer.write("Please kill yourself, thank you!\n");
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

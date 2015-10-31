@@ -98,6 +98,16 @@ public class ProcessManager implements Runnable {
     }
 
     public void add_process(String a_run_path) {
+        File f = new File(a_run_path);
+        try {
+            Process process = Runtime.getRuntime().exec("./build.sh", null, f);
+            process.waitFor();
+            process.destroy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ProcessWatchDog processWatchDog = new ProcessWatchDog(a_run_path, "./run.sh");
         synchronized (processWatchDogs) {
             ProcessWatchDogList processWatchDogList = processWatchDogs.get(a_run_path);
@@ -154,14 +164,17 @@ public class ProcessManager implements Runnable {
     }
 
     public void set_process_count(String a_run_path, int a_process_count) {
+        String run_path = a_run_path;
+        if (run_path.endsWith("/"))
+            run_path = run_path.substring(0, run_path.length() - 1);
         synchronized (processWatchDogs) {
-            if (processWatchDogs.containsKey(a_run_path)) {
-                ProcessWatchDogList processWatchDogList = processWatchDogs.get(a_run_path);
+            if (processWatchDogs.containsKey(run_path)) {
+                ProcessWatchDogList processWatchDogList = processWatchDogs.get(run_path);
                 processWatchDogList.plan_process_count = a_process_count;
             } else {
                 ProcessWatchDogList processWatchDogList = new ProcessWatchDogList();
                 processWatchDogList.plan_process_count = a_process_count;
-                processWatchDogs.put(a_run_path, processWatchDogList);
+                processWatchDogs.put(run_path, processWatchDogList);
             }
         }
     }

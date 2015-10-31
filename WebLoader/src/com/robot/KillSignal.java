@@ -15,7 +15,15 @@ public class KillSignal implements Runnable, SignalHandler {
     public boolean has_kill = false;
 
     public KillSignal() {
+        Signal.handle(new Signal("TERM"), this);
+        Signal.handle(new Signal("INT"), this);
+    }
+
+    public void start() {
         new Thread(this).start();
+    }
+
+    public void add_signal() {
         Signal.handle(new Signal("TERM"), this);
         Signal.handle(new Signal("INT"), this);
     }
@@ -46,7 +54,7 @@ public class KillSignal implements Runnable, SignalHandler {
         System.out.printf("OK, I will kill myself!\n");
         /* You can do somethings to the end */
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
