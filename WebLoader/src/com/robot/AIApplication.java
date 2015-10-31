@@ -21,8 +21,13 @@ public class AIApplication {
     public void run() {
         URLQueue urlQueue = new URLQueue("URL Queue");
         urlQueue.start();
-        WebLoader webLoader = new WebLoader("WebLoader", urlQueue);
-        webLoader.start();
+        int webloader_count = 10;
+        ArrayList<WebLoader> webLoaders = new ArrayList<WebLoader>();
+        for (int i = 0; i < webloader_count; i ++) {
+            WebLoader webLoader = new WebLoader("WebLoader", urlQueue);
+            webLoaders.add(webLoader);
+            webLoader.start();
+        }
         while (!killSignal.has_kill) {
             try {
                 Thread.sleep(1000);

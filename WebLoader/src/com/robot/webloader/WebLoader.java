@@ -44,7 +44,7 @@ public class WebLoader implements Runnable {
             while (is_run) {
                 URLModel target_url = urlQueue.get_one_url();
                 if (target_url != null && target_url.url.length() > 0) {
-                    System.out.printf("URL : %s\n", target_url.url);
+//                    System.out.printf("URL : %s\n", target_url.url);
                     URL httpurl = null;
                     try {
                         httpurl = new URL(target_url.url);
