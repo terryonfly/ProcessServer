@@ -12,14 +12,14 @@ public class URLQueue implements Runnable {
     String thread_name;
     boolean is_run;
     Connector db;
-    ArrayList<String> target_urls;
+    ArrayList<URLModel> target_urls;
 
     public URLQueue(String a_thread_name) {
         thread_name = a_thread_name;
         is_run = false;
         db = new Connector();
         db.connect();
-        target_urls = new ArrayList<String>();
+        target_urls = new ArrayList<URLModel>();
     }
 
     public void start() {
@@ -53,7 +53,7 @@ public class URLQueue implements Runnable {
             need_fill = true;
         }
         if (need_fill) {
-            ArrayList<String> fill_urls = db.get_urls(1000);
+            ArrayList<URLModel> fill_urls = db.get_urls(1000);
             synchronized (target_urls) {
                 for (int i = 0; i < fill_urls.size(); i ++) {
                     target_urls.add(fill_urls.get(i));
@@ -63,8 +63,8 @@ public class URLQueue implements Runnable {
         return need_fill;
     }
 
-    public String get_one_url() {
-        String url = "";
+    public URLModel get_one_url() {
+        URLModel url = null;
         synchronized (target_urls) {
             if (target_urls.size() > 0) {
                 url = target_urls.get(0);

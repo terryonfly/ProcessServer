@@ -2,6 +2,7 @@ package com.robot.database;
 
 import java.sql.*;
 import java.util.ArrayList;
+import com.robot.webloader.URLModel;
 
 public class Connector {
     String driver = "com.mysql.jdbc.Driver";
@@ -62,8 +63,8 @@ public class Connector {
         }
     }
 
-    public ArrayList<String> get_urls(int count) {
-        ArrayList<String> urls = new ArrayList<String>();
+    public ArrayList<URLModel> get_urls(int count) {
+        ArrayList<URLModel> urls = new ArrayList<URLModel>();
         try {
             if(!is_connected() && !connect())
                 return urls;
@@ -72,7 +73,11 @@ public class Connector {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 int url_id = rs.getInt("id");
-                urls.add(rs.getString("url"));
+                String url = rs.getString("url");
+                URLModel urlModel = new URLModel();
+                urlModel.url_id = url_id;
+                urlModel.url = url;
+                urls.add(urlModel);
                 set_url_getted(url_id);
             }
             rs.close();
