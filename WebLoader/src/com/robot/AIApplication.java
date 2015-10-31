@@ -1,5 +1,8 @@
 package com.robot;
 
+import com.robot.webloader.URLQueue;
+import com.robot.webloader.WebLoader;
+
 import java.util.*;
 
 public class AIApplication {
@@ -16,8 +19,16 @@ public class AIApplication {
     }
 
     public void run() {
+        URLQueue urlQueue = new URLQueue("URL Queue");
+        urlQueue.start();
+        WebLoader webLoader = new WebLoader("WebLoader", urlQueue);
+        webLoader.start();
         while (!killSignal.has_kill) {
-            
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
