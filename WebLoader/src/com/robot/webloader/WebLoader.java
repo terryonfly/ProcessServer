@@ -66,7 +66,7 @@ public class WebLoader implements Runnable {
                     }
 //                    save_web_data(data, "data/", file_name);
                 } else {
-                    System.out.println("No urls in DB");
+//                    System.out.println("No urls in DB");
                     Thread.sleep(1000);
                 }
             }
