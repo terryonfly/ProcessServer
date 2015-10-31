@@ -62,25 +62,6 @@ public class Connector {
         }
     }
 
-    public void add_url(String a_url) {
-        if (a_url.length() > 250) {
-            System.err.printf("New url's length > 250 and pass\n");
-            return;
-        }
-        try {
-            if(!is_connected() && !connect())
-                return;
-            Statement statement = conn.createStatement();
-            String sql = "insert into `corpus`.`urls` values(NULL, '" + a_url + "', 0) on duplicate key update urls.getted = urls.getted;";
-            statement.executeUpdate(sql);
-            statement.close();
-        } catch (SQLException e1) {
-//            System.err.printf("add_url err : %s\n", e1);
-//            e1.printStackTrace();
-            return;
-        }
-    }
-
     public ArrayList<String> get_urls(int count) {
         ArrayList<String> urls = new ArrayList<String>();
         try {
