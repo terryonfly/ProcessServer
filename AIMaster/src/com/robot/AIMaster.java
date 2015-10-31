@@ -22,7 +22,7 @@ public class AIMaster {
                             System.out.printf("count = %d\n", run_count);
                             try {
                                 if (run_count == 0) Thread.sleep(420 * 1000);
-                                else Thread.sleep(900 * 100);
+                                else Thread.sleep(600 * 1000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
