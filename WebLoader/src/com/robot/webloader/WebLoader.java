@@ -58,17 +58,14 @@ public class WebLoader implements Runnable {
 
     public void save_web_data(String a_data, String a_path, String a_name) {
         String save_file_name = a_path + a_name;
-//        File file = new File(save_file_name);
-//        if (file.exists()) {
+        File file = new File(save_file_name);
+        if (file.exists()) {
 //            file.delete();
-//        }
-//        try {
-//            file.createNewFile();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+            return;
+        }
         FileWriter writer = null;
         try {
+            file.createNewFile();
             writer = new FileWriter(save_file_name, true);
             writer.write(a_data);
             writer.flush();
