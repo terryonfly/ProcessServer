@@ -21,10 +21,10 @@ public class AIApplication {
     public void run() {
         URLQueue urlQueue = new URLQueue("URL Queue");
         urlQueue.start();
-        int webloader_count = 10;
+        int webloader_count = 15;
         ArrayList<WebLoader> webLoaders = new ArrayList<WebLoader>();
         for (int i = 0; i < webloader_count; i ++) {
-            WebLoader webLoader = new WebLoader("WebLoader", urlQueue);
+            WebLoader webLoader = new WebLoader("WebLoader" + i, urlQueue);
             webLoaders.add(webLoader);
             webLoader.start();
         }

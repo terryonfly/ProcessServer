@@ -54,13 +54,13 @@ public class URLQueue implements Runnable {
             need_fill = true;
         }
         if (need_fill) {
-            System.out.printf("%d urls done.\n", done_count);
             ArrayList<URLModel> fill_urls = db.get_urls(1000);
             synchronized (target_urls) {
                 for (int i = 0; i < fill_urls.size(); i ++) {
                     target_urls.add(fill_urls.get(i));
                 }
             }
+            System.out.printf("%d urls done.\n", done_count);
         }
         return need_fill;
     }

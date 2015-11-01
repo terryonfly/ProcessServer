@@ -1,11 +1,14 @@
 package com.robot.webloader;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import info.monitorenter.cpdetector.io.*;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -39,28 +42,29 @@ public class WebLoader implements Runnable {
 
     @Override
     public void run() {
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        String pid = name.split("@")[0];
+        HTMLDog htmlDog = new HTMLDog("tmp/" + thread_name + "@" + pid + ".tmp.data");
         try {
             while (is_run) {
                 URLModel target_url = urlQueue.get_one_url();
                 if (target_url != null && target_url.url.length() > 0) {
 //                    System.out.printf("URL : %s\n", target_url.url);
-                    URL httpurl = null;
-                    try {
-                        httpurl = new URL(target_url.url);
-                    } catch (MalformedURLException e) {
-                        System.err.printf("target_url is not a good url!\n");
+                    String content = htmlDog.getContent(target_url.url);
+                    if (content == null || content.length() == 0) {
                         continue;
                     }
-                    // Save it
-                    String file_name = target_url.url_id + ".html";
+                    String file_name = target_url.url_id + ".data";
                     File file = new File("data/" + file_name);
                     if (file.exists()) {
                         continue;
                     }
                     try {
-                        FileUtils.copyURLToFile(httpurl, file);
+                        FileWriter writer = new FileWriter(file);
+                        writer.write(content);
+                        writer.flush();
+                        writer.close();
                     } catch (IOException e) {
-                        System.err.printf("url load err\n");
                         continue;
                     }
                 } else {
