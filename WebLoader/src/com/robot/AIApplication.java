@@ -23,23 +23,14 @@ public class AIApplication {
         urlQueue.start();
         int webloader_count = 10;
         ArrayList<WebLoader> webLoaders = new ArrayList<WebLoader>();
+        for (int i = 0; i < webloader_count; i ++) {
+            WebLoader webLoader = new WebLoader("WebLoader" + i, urlQueue);
+            webLoaders.add(webLoader);
+            webLoader.start();
+        }
         while (!killSignal.has_kill) {
-            if (urlQueue.target_urls.size() == 0 && webLoaders.size() != 0) {
-                for (int i = 0; i < webLoaders.size(); i ++) {
-                    webLoaders.get(i).stop();
-                    webLoaders.remove(i);
-                    i --;
-                }
-            }
-            if (urlQueue.target_urls.size() > 500 & webLoaders.size() == 0) {
-                for (int i = 0; i < webloader_count; i ++) {
-                    WebLoader webLoader = new WebLoader("WebLoader" + i, urlQueue);
-                    webLoaders.add(webLoader);
-                    webLoader.start();
-                }
-            }
             try {
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
