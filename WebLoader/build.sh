@@ -1,1 +1,1 @@
-javac -cp src/:lib/commons-io-1.4.jar:lib/mysql-connector-java-5.1.25-bin.jar -d bin/ src/com/robot/AIApplication.java
+javac -cp src/:lib/cpdetector_1.0.7.jar:lib/antlr.jar:lib/commons-codec-1.7.jar:lib/chardet.jar:lib/commons-httpclient.jar:lib/commons-logging-1.1.1.jar:lib/httpclient-4.2.2.jar:lib/httpcore-4.2.2.jar:lib/jargs.jar:lib/commons-io-1.4.jar:lib/mysql-connector-java-5.1.25-bin.jar -d bin/ src/com/robot/AIApplication.java
