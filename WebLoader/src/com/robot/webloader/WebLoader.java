@@ -52,6 +52,7 @@ public class WebLoader implements Runnable {
 //                    System.out.printf("URL : %s\n", target_url.url);
                     String content = htmlDog.getContent(target_url.url);
                     if (content == null || content.length() == 0) {
+                        urlQueue.feedback_loading_result(target_url, false);
                         continue;
                     }
                     String file_name = target_url.url_id + ".data";
@@ -65,11 +66,13 @@ public class WebLoader implements Runnable {
                         writer.flush();
                         writer.close();
                     } catch (IOException e) {
+                        urlQueue.feedback_loading_result(target_url, false);
                         continue;
                     }
+                    urlQueue.feedback_loading_result(target_url, true);
                 } else {
 //                    System.out.println("No urls in DB");
-                    Thread.sleep(1000);
+                    Thread.sleep(10 * 000);
                 }
             }
         } catch (InterruptedException e) {

@@ -78,7 +78,7 @@ public class Connector {
                 urlModel.url_id = url_id;
                 urlModel.url = url;
                 urls.add(urlModel);
-                set_url_getted(url_id);
+                set_url_getted(url_id, 1);
             }
             rs.close();
             statement.close();
@@ -89,12 +89,12 @@ public class Connector {
         return urls;
     }
 
-    public void set_url_getted(int a_url_id) {
+    public void set_url_getted(int a_url_id, int a_status) {
         try {
             if(!is_connected() && !connect())
                 return;
             Statement statement = conn.createStatement();
-            String sql = "update corpus.urls set getted=1 where id=" + a_url_id + ";";
+            String sql = "update corpus.urls set getted=" + a_status + " where id=" + a_url_id + ";";
             statement.executeUpdate(sql);
             statement.close();
         } catch (SQLException e1) {

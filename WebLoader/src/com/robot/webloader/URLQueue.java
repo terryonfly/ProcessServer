@@ -12,7 +12,7 @@ public class URLQueue implements Runnable {
     String thread_name;
     boolean is_run;
     Connector db;
-    ArrayList<URLModel> target_urls;
+    public ArrayList<URLModel> target_urls;
     int done_count = 0;
 
     public URLQueue(String a_thread_name) {
@@ -54,13 +54,15 @@ public class URLQueue implements Runnable {
             need_fill = true;
         }
         if (need_fill) {
-            ArrayList<URLModel> fill_urls = db.get_urls(1000);
+            ArrayList<URLModel> fill_urls = null;
+            synchronized (db) {
+                fill_urls = db.get_urls(1000);
+            }
             synchronized (target_urls) {
                 for (int i = 0; i < fill_urls.size(); i ++) {
                     target_urls.add(fill_urls.get(i));
                 }
             }
-            System.out.printf("%d urls done.\n", done_count);
         }
         return need_fill;
     }
@@ -75,6 +77,14 @@ public class URLQueue implements Runnable {
             }
         }
         return url;
+    }
+
+    public void feedback_loading_result(URLModel a_url, boolean a_finished) {
+        if (a_finished) {
+            synchronized (db) {
+                db.set_url_getted(a_url.url_id, 2);
+            }
+        }
     }
 
     @Override
