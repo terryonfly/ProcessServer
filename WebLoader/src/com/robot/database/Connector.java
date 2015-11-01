@@ -6,8 +6,8 @@ import com.robot.webloader.URLModel;
 
 public class Connector {
     String driver = "com.mysql.jdbc.Driver";
-    String url = "jdbc:mysql://localhost/corpus?Unicode=true&characterEncoding=UTF8";
-//    String url = "jdbc:mysql://robot.mokfc.com/corpus?Unicode=true&characterEncoding=UTF8";
+//    String url = "jdbc:mysql://localhost/corpus?Unicode=true&characterEncoding=UTF8";
+    String url = "jdbc:mysql://robot.mokfc.com/corpus?Unicode=true&characterEncoding=UTF8";
     String user = "root";
     String password = "513939";
 
@@ -95,10 +95,11 @@ public class Connector {
                 return;
             Statement statement = conn.createStatement();
             String sql = "update corpus.urls set getted=" + a_status + " where id=" + a_url_id + ";";
+            System.out.println(sql);
             statement.executeUpdate(sql);
             statement.close();
         } catch (SQLException e1) {
-//            e1.printStackTrace();
+            e1.printStackTrace();
             return;
         }
     }
