@@ -80,10 +80,8 @@ public class URLQueue implements Runnable {
     }
 
     public void feedback_loading_result(URLModel a_url, boolean a_finished) {
-        if (a_finished) {
-            synchronized (db) {
-                db.set_url_getted(a_url.url_id, 2);
-            }
+        synchronized (db) {
+            db.set_url_status(a_url.url_id, (a_finished) ? 3 : 2);
         }
     }
 

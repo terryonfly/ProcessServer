@@ -1,0 +1,1 @@
+javac -cp src/:lib/mysql-connector-java-5.1.25-bin.jar:lib/htmllexer.jar:lib/htmlparser.jar -d bin/ src/com/robot/AIApplication.java
