@@ -103,13 +103,11 @@ public class URLQueue implements Runnable {
         if (res) {
             db.add_url(url_to_commit);
         }
-        System.out.printf("uncommit urls : %8d\r", uncommit_urls.size());
         return res;
     }
 
     public void add_urls(ArrayList<String> a_urls) {
-        System.out.printf("add %d new urls\n", a_urls.size());
-        System.out.printf("uncommit urls : %8d\r", uncommit_urls.size());
+        System.out.printf("add %d new urls, uncommit %d urls\n", a_urls.size(), uncommit_urls.size());
         if (a_urls.size() == 0) return;
         int added_url_count = 0;
         synchronized (uncommit_urls) {
