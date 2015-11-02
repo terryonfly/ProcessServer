@@ -60,7 +60,7 @@ public class HTMLDog {
                 HttpConnectionParams.setConnectionTimeout(httpGet.getParams(), timeOut);
                 HttpConnectionParams.setSoTimeout(httpGet.getParams(), timeOut);
                 HttpResponse httpResponse = client.execute(httpGet);
-                int content_length = Integer.parseInt(httpResponse.getLastHeader("Content-Length").getValue());
+                long content_length = httpResponse.getEntity().getContentLength();
                 if (content_length > 5000 * 1000) {// Max : 5 MB
                     System.out.printf("length = %7d KB\n", content_length / 1000);
                     httpGet.abort();
