@@ -27,7 +27,7 @@ public class HTMLDog {
     private	final static int timeOut = 3000;
     private final static int retry_count = 3;
 
-    final static DefaultHttpClient client = new DefaultHttpClient();
+    private DefaultHttpClient client = new DefaultHttpClient();
     private static final Pattern p_charset = Pattern.compile("charset\\s?=\\s?([a-zA-Z0-9\\-]+)");
     private static final Pattern p_encoding = Pattern.compile("encoding=\"([a-zA-Z0-9\\-]+)\"");
 
