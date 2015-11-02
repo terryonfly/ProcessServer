@@ -6,6 +6,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
@@ -27,12 +28,13 @@ public class HTMLDog {
     private	final static int timeOut = 3000;
     private final static int retry_count = 3;
 
-    private DefaultHttpClient client = new DefaultHttpClient();
+    DefaultHttpClient client;
     private static final Pattern p_charset = Pattern.compile("charset\\s?=\\s?([a-zA-Z0-9\\-]+)");
     private static final Pattern p_encoding = Pattern.compile("encoding=\"([a-zA-Z0-9\\-]+)\"");
 
     public HTMLDog(String a_tmp_file_path) {
         tmp_file_path = a_tmp_file_path;
+        client = HTTPClient.getInstance().client;
     }
 
     public String getContent(String url) {
@@ -74,7 +76,7 @@ public class HTMLDog {
                     }
                 }
                 if (statusCode != 200) {
-                    System.out.printf("status != %d\n", statusCode);
+                    System.out.printf("status = %d\n", statusCode);
                 }
             } catch(Exception e) {
 //                e.printStackTrace();
@@ -133,18 +135,14 @@ public class HTMLDog {
                 }
                 k ++;
             }
-            if (charsetName == null) {
-                System.out.printf("%d charset = null\n", k);
-            } else {
-                System.out.printf("%d charset = %s\n", k, charsetName);
-            }
+//            System.out.printf("%d charset = %s\n", k, charsetName);
 
             if (charsetName == null) return "";
             String content = new String(bytes, charsetName);
             return content;
         }
         catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         } finally {
             try {
                 entity.getContent().close();
